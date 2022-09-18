@@ -1,18 +1,23 @@
 const canvas = document.querySelector('canvas')
-const ctx = canvas.getContext('2D')
 
 canvas.width = 1024
 canvas.height = 576
 
+const ctx = canvas.getContext('2d')
+
 ctx.fillStyle = 'white'
 ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-const mapImage = new Image()
-mapImage.src = './img/Pellet Town.png'
+const image = new Image()
+image.src = 'PelletTown.png'
+
 
 image.onLoad = () => { 
-    ctx.drawImage(mapImage, '750', '-560')
+    console.log(ctx)
+    ctx.drawImage(image, 0, 0)
 }
+
+
 
 
 
