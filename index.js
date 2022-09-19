@@ -1,3 +1,14 @@
+const canvas = document.querySelector('canvas')
+const ctx = canvas.getContext('2d')
+
+canvas.width = 1024
+canvas.height = 576
+
+const offset = {
+    x: -450,
+    y: -450
+}
+
 const collisions = [0, 0, 0, 0, 0, 0, 1128, 1128, 0, 0, 0, 0, 0, 0, 0, 1128, 1128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 1128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1128, 1128, 1128, 1128, 1128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 1128, 1128, 1128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1128, 1128, 1128, 1128, 1128, 1128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -38,10 +49,20 @@ const collisions = [0, 0, 0, 0, 0, 0, 1128, 1128, 0, 0, 0, 0, 0, 0, 0, 1128, 112
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1128, 1128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1128, 0, 0, 0, 0, 0, 0, 0, 1128, 1128, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1128, 1128, 1128, 1128, 1128, 1128, 1128, 1128, 0, 0, 0, 0, 0, 1128, 1128, 1128, 1128, 1128, 1128, 1128, 0, 0, 0, 0, 0, 1128, 1128, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1128, 1128, 1128, 1128, 1128, 1128, 1128, 0, 0, 0, 0, 0, 1128, 1128, 1128, 1128, 1128, 1128, 1128, 0, 0, 0, 0]
+  
+const collisionMap = [] 
+
+for (let i = 0; i < collisions.length; i+= 40) {
+    collisionMap.push(collisions.slice(i, 40 + i))
+}
 
 class Boundary {
+    static width = 48
+    static height = 48
     constructor({pos}) {
         this.pos = pos 
+        this.width = 48
+        this.height = 48
     }
     
     draw() {
@@ -49,27 +70,23 @@ class Boundary {
         ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height)
     }
 }
-    
-const collisionMap = [] 
 
-for (let i = 0; i < collisions.length; i+= 40) {
-    collisionMap.push(collisions.slice(i, 40 + i))
-}
-    
-const boundries = [] 
+const boundries = []
 
-const offset = {
-    x: -450,
-    y: -450
-}
-    
 collisionMap.forEach((row, idx) => {
     row.forEach((ele, jdx) => {
-    if (ele === 1128) {
-        boundries.push(new Boundary({pos: {x: jdx * 48 + offset.x, y: idx * 48 + offset.y}}))
-    }})
+        if (ele === 1128) {
+            boundries.push(
+                new Boundary({
+                    pos: {
+                        x: jdx * Boundary.width + offset.x, 
+                        y: idx * Boundary.height + offset.y
+                    }
+                })
+            )
+        }
+    })
 })
-
 
 const keyPressed = {
     w: {
@@ -116,19 +133,13 @@ window.addEventListener('keyup', (temp) => {
     }
 })
 
-const canvas = document.querySelector('canvas')
-const ctx = canvas.getContext('2d')
 
-canvas.width = 1024
-canvas.height = 576
-
-const map = new Image()
-map.src = 'map.png'
-let mapX = offset.x
-let mapY = offset.y
+const map = new Image();map.src = 'map.png';let mapX = offset.x;let mapY = offset.y
 
 const playerImage = new Image() 
 playerImage.src = 'playerDown.png'
+
+// const moveable = [map, boundries]
 
 function animate() {
     window.requestAnimationFrame(animate)
@@ -148,13 +159,25 @@ function animate() {
             playerImage.height
         )
 
-        if (keyPressed.w.pressed) {
+        if (keyPressed.w.pressed && previousKey === 'w') {
+            boundries.forEach((ele) => {
+                ele.pos.y += 3
+            })
             mapY += 3
-        } else if (keyPressed.d.pressed) {
+        } else if (keyPressed.d.pressed && previousKey === 'd') {
+            boundries.forEach((ele) => {
+                ele.pos.x -= 3
+            })
             mapX -= 3
-        } else if (keyPressed.a.pressed) {
+        } else if (keyPressed.a.pressed && previousKey === 'a') {
+            boundries.forEach((ele) => {
+                ele.pos.x += 3
+            })
             mapX += 3
-        } else if (keyPressed.s.pressed) {
+        } else if (keyPressed.s.pressed && previousKey === 's') {
+            boundries.forEach((ele) => {
+                ele.pos.y -= 3
+            })
             mapY -= 3
         }
 }
