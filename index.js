@@ -80,16 +80,23 @@ class Monster {
     constructor({pos, image}) {
         this.pos = pos 
         this.image = image 
+        this.width = 100
+        this.height = 100
     }
 
     draw() {
         ctx.drawImage(
             this.image,
-            250, 
-            250,
-            this.pos.y - 10,
-            this.pos.x - 10,
+            this.pos.x, 
+            this.pos.y,
+            this.width,
+            this.height
         )
+    }
+
+    move() {
+        this.draw()
+        this.pos.x += 2
     }
 
  }
@@ -184,7 +191,7 @@ const playerImage = new Image()
 playerImage.src = 'playerDown.png'
 
 const monsterImage = new Image() 
-monsterImage.src = 'snake.png'
+monsterImage.src = 'playerRight.png'
 
 const player = new Player({
     pos: {
@@ -226,7 +233,7 @@ function animate() {
             }
         })
         player.draw()
-        monster.draw()
+        monster.move()
 
         let moving = true 
 
@@ -257,6 +264,7 @@ function animate() {
                     
                 })
                 mapY += 3
+                monster.pos.y += 3
                 
             }
         } else if (keyPressed.d.pressed && previousKey === 'd') {
@@ -284,6 +292,7 @@ function animate() {
                     ele.pos.x -= 3
                 })
                 mapX -= 3
+                monster.pos.x -= 3
             }     
         } else if (keyPressed.a.pressed && previousKey === 'a') {
             for (let i = 0; i < boundries.length; i++) {
@@ -311,6 +320,7 @@ function animate() {
                     ele.pos.x += 3
                 })
                 mapX += 3
+                monster.pos.x += 3
             }
         } else if (keyPressed.s.pressed && previousKey === 's') {
             for (let i = 0; i < boundries.length; i++) {
@@ -338,6 +348,7 @@ function animate() {
                     ele.pos.y -= 3
                 })
                 mapY -= 3
+                monster.pos.y -= 3
             }
         }
 }
