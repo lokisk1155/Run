@@ -67,7 +67,7 @@ class Player {
             0, 
             0,
             this.image.width / this.frames.max,
-            this.pos.x - 175,
+            this.pos.x,
             canvas.width / 2 - (this.width / 4) / 2, 
             canvas.height / 2 - (this.height / 2),
             this.image.width / this.frames.max,
@@ -177,10 +177,10 @@ const player = new Player({
 })
 
 function playerCollision({rec1, rec2}) {
-    if (rec1.pos.x + rec1.width >= rec2.pos.x && 
-        rec1.pos.x <= rec2.pos.x + rec2.width &&
-        rec1.pos.y <= rec2.pos.y + rec2.height &&
-        rec1.pos.y + rec1.height >= rec2.pos.y) {
+    if (rec1.pos.x + 10 + rec1.width >= rec2.pos.x && 
+        rec1.pos.x + 25 <= rec2.pos.x + rec2.width &&
+        rec1.pos.y <= rec2.pos.y + 50 + rec2.height &&
+        rec1.pos.y - 100 + rec1.height >= rec2.pos.y) {
             return true 
         }
     return false 
@@ -210,7 +210,7 @@ function animate() {
                     playerCollision({
                         rec1: player,
                         rec2: {
-                            bound,
+                            ...bound,
                             pos: {
                                 x: bound.pos.x,
                                 y: bound.pos.y + 3
@@ -219,6 +219,7 @@ function animate() {
                     })
                 ) {
                     moving = false 
+                    break
                 }
             } 
             if (moving) {
@@ -228,20 +229,85 @@ function animate() {
                 mapY += 3
             }
         } else if (keyPressed.d.pressed && previousKey === 'd') {
-            boundries.forEach((ele) => {
-                ele.pos.x -= 3
-            })
-            mapX -= 3
+            for (let i = 0; i < boundries.length; i++) {
+                const bound = boundries[i]
+
+                if (
+                    playerCollision({
+                        rec1: player,
+                        rec2: {
+                            ...bound,
+                            pos: {
+                                x: bound.pos.x - 3,
+                                y: bound.pos.y 
+                            }
+                        }
+                    })
+                ) {
+                    moving = false 
+                    break
+                }
+            } 
+            if (moving) {
+                boundries.forEach((ele) => {
+                    ele.pos.x -= 3
+                })
+                mapX -= 3
+            }     
         } else if (keyPressed.a.pressed && previousKey === 'a') {
-            boundries.forEach((ele) => {
-                ele.pos.x += 3
-            })
-            mapX += 3
+            for (let i = 0; i < boundries.length; i++) {
+                const bound = boundries[i]
+
+                if (
+                    playerCollision({
+                        rec1: player,
+                        rec2: {
+                            ...bound,
+                            pos: {
+                                x: bound.pos.x + 3,
+                                y: bound.pos.y 
+                            }
+                        }
+                    })
+                ) {
+                    moving = false 
+                    break
+                }
+            } 
+            
+            if (moving) {
+                boundries.forEach((ele) => {
+                    ele.pos.x += 3
+                })
+                mapX += 3
+            }
         } else if (keyPressed.s.pressed && previousKey === 's') {
-            boundries.forEach((ele) => {
-                ele.pos.y -= 3
-            })
-            mapY -= 3
+            for (let i = 0; i < boundries.length; i++) {
+                const bound = boundries[i]
+
+                if (
+                    playerCollision({
+                        rec1: player,
+                        rec2: {
+                            ...bound,
+                            pos: {
+                                x: bound.pos.x,
+                                y: bound.pos.y - 3
+                            }
+                        }
+                    })
+                ) {
+                    moving = false 
+                    break
+                }
+            } 
+
+            if (moving) {
+                boundries.forEach((ele) => {
+                    ele.pos.y -= 3
+                })
+                mapY -= 3
+            }
         }
 }
 animate()
