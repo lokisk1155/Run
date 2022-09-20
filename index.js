@@ -76,6 +76,24 @@ class Player {
     }
  }
 
+class Monster {
+    constructor({pos, image}) {
+        this.pos = pos 
+        this.image = image 
+    }
+
+    draw() {
+        ctx.drawImage(
+            this.image,
+            250, 
+            250,
+            this.pos.y - 10,
+            this.pos.x - 10,
+        )
+    }
+
+ }
+
 class Boundary {
     constructor({pos}) {
         this.pos = pos 
@@ -165,6 +183,9 @@ let mapY = offset.y
 const playerImage = new Image() 
 playerImage.src = 'playerDown.png'
 
+const monsterImage = new Image() 
+monsterImage.src = 'snake.png'
+
 const player = new Player({
     pos: {
         x: canvas.width / 2 - 190 / 4 / 2, 
@@ -174,6 +195,14 @@ const player = new Player({
     frames: {
         max: 4
     }
+})
+
+const monster = new Monster({
+    pos: {
+        x: 50,
+        y: 50
+    }, 
+    image: monsterImage
 })
 
 function playerCollision({rec1, rec2}) {
@@ -188,7 +217,6 @@ function playerCollision({rec1, rec2}) {
 
 function animate() {
     window.requestAnimationFrame(animate)
-        //playMap.draw()
         ctx.drawImage(map, mapX, mapY)
         boundries.forEach((boundary) => {
             boundary.draw()
@@ -198,6 +226,7 @@ function animate() {
             }
         })
         player.draw()
+        monster.draw()
 
         let moving = true 
 
@@ -225,8 +254,10 @@ function animate() {
             if (moving) {
                 boundries.forEach((ele) => {
                     ele.pos.y += 3
+                    
                 })
                 mapY += 3
+                
             }
         } else if (keyPressed.d.pressed && previousKey === 'd') {
             for (let i = 0; i < boundries.length; i++) {
