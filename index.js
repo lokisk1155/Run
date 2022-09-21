@@ -74,14 +74,37 @@ class Player {
             350
         )
     }
+
  }
+
+const map = new Image()
+map.src = 'testmap.png'
+let mapX = offset.x
+let mapY = offset.y 
+
+const playerImage = new Image() 
+playerImage.src = 'playerDown.png'
+
+const monsterImage = new Image() 
+monsterImage.src = 'playerRight.png'
+
+const player = new Player({
+    pos: {
+        x: canvas.width / 2 - 190 / 4 / 2, 
+        y: canvas.height / 2 + 70 / 2
+    },
+    image: playerImage, 
+    frames: {
+        max: 4
+    }
+})
 
 class Monster {
     constructor({pos, image}) {
         this.pos = pos 
         this.image = image 
-        this.width = 100
-        this.height = 100
+        this.width = 75
+        this.height = 75
     }
 
     draw() {
@@ -94,12 +117,34 @@ class Monster {
         )
     }
 
-    move() {
+    moveRight() {
         this.draw()
         this.pos.x += 2
     }
 
+    moveLeft() {
+        this.draw()
+        this.pos.x -= 2
+    }
+
+    moveDown() {
+        this.draw()
+        this.pos.y += 2 
+    }
+
+    moveUp() {
+        this.draw()
+        this.pos.y -= 2
+    }
  }
+
+ const monster = new Monster({
+    pos: {
+        x: 50,
+        y: 50
+    }, 
+    image: monsterImage
+})
 
 class Boundary {
     constructor({pos}) {
@@ -182,35 +227,9 @@ window.addEventListener('keyup', (temp) => {
     }
 })
 
-const map = new Image()
-map.src = 'testmap.png'
-let mapX = offset.x
-let mapY = offset.y 
 
-const playerImage = new Image() 
-playerImage.src = 'playerDown.png'
 
-const monsterImage = new Image() 
-monsterImage.src = 'playerRight.png'
 
-const player = new Player({
-    pos: {
-        x: canvas.width / 2 - 190 / 4 / 2, 
-        y: canvas.height / 2 + 70 / 2
-    },
-    image: playerImage, 
-    frames: {
-        max: 4
-    }
-})
-
-const monster = new Monster({
-    pos: {
-        x: 50,
-        y: 50
-    }, 
-    image: monsterImage
-})
 
 function playerCollision({rec1, rec2}) {
     if (rec1.pos.x + 10 + rec1.width >= rec2.pos.x && 
@@ -220,6 +239,26 @@ function playerCollision({rec1, rec2}) {
             return true 
         }
     return false 
+}
+
+function bruteForceChase({rec1, rec2}) {
+    if (rec1.pos.x < rec2.pos.x + 15) {
+        console.log('poop')
+        rec1.pos.x += 1.25
+    }
+
+    if (rec1.pos.y < rec2.pos.y - 100) {
+        console.log('square')
+        rec1.pos.y += 1.25
+    }
+
+    if (rec1.pos.y > rec2.pos.y - 100) {
+        rec1.pos.y -= 1.25
+    }
+
+    if (rec1.pos.x > rec2.pos.x +15) {
+        rec1.pos.x -= 1.25
+    }
 }
 
 function animate() {
@@ -233,9 +272,12 @@ function animate() {
             }
         })
         player.draw()
-        monster.move()
+        monster.draw()
 
-        let moving = true 
+        bruteForceChase({rec1: monster, rec2: player})
+        
+        let movingPlayer = true 
+        let movingAI = true 
 
         if (keyPressed.w.pressed && previousKey === 'w') {
 
@@ -254,11 +296,27 @@ function animate() {
                         }
                     })
                 ) {
-                    moving = false 
+                    movingPlayer = false 
+                    break
+                }
+
+                if (
+                    playerCollision({
+                        rec1: monster,
+                        rec2: {
+                            ...bound,
+                            pos: {
+                                x: bound.pos.x,
+                                y: bound.pos.y + 3
+                            }
+                        }
+                    })
+                ) {
+                    movingAI = false 
                     break
                 }
             } 
-            if (moving) {
+            if (movingPlayer) {
                 boundries.forEach((ele) => {
                     ele.pos.y += 3
                     
@@ -283,11 +341,27 @@ function animate() {
                         }
                     })
                 ) {
-                    moving = false 
+                    movingPlayer = false 
+                    break
+                }
+
+                if (
+                    playerCollision({
+                        rec1: monster,
+                        rec2: {
+                            ...bound,
+                            pos: {
+                                x: bound.pos.x - 3,
+                                y: bound.pos.y 
+                            }
+                        }
+                    })
+                ) {
+                    movingAI = false 
                     break
                 }
             } 
-            if (moving) {
+            if (movingPlayer) {
                 boundries.forEach((ele) => {
                     ele.pos.x -= 3
                 })
@@ -310,12 +384,28 @@ function animate() {
                         }
                     })
                 ) {
-                    moving = false 
+                    movingPlayer = false 
+                    break
+                }
+
+                if (
+                    playerCollision({
+                        rec1: monster,
+                        rec2: {
+                            ...bound,
+                            pos: {
+                                x: bound.pos.x + 3,
+                                y: bound.pos.y 
+                            }
+                        }
+                    })
+                ) {
+                    movingAI = false 
                     break
                 }
             } 
             
-            if (moving) {
+            if (movingPlayer) {
                 boundries.forEach((ele) => {
                     ele.pos.x += 3
                 })
@@ -338,12 +428,28 @@ function animate() {
                         }
                     })
                 ) {
-                    moving = false 
+                    movingPlayer = false 
+                    break
+                }
+
+                if (
+                    playerCollision({
+                        rec1: player,
+                        rec2: {
+                            ...bound,
+                            pos: {
+                                x: bound.pos.x,
+                                y: bound.pos.y - 3
+                            }
+                        }
+                    })
+                ) {
+                    movingAI = false 
                     break
                 }
             } 
 
-            if (moving) {
+            if (movingPlayer) {
                 boundries.forEach((ele) => {
                     ele.pos.y -= 3
                 })
