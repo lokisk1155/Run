@@ -243,12 +243,10 @@ function playerCollision({rec1, rec2}) {
 
 function bruteForceChase({rec1, rec2}) {
     if (rec1.pos.x < rec2.pos.x + 15) {
-        console.log('poop')
         rec1.pos.x += 1.25
     }
 
     if (rec1.pos.y < rec2.pos.y - 100) {
-        console.log('square')
         rec1.pos.y += 1.25
     }
 
@@ -261,8 +259,24 @@ function bruteForceChase({rec1, rec2}) {
     }
 }
 
+function gameOver({rec1, rec2}) {
+    // console.log(rec1.pos.x)
+    // console.log(rec2.pos.x)
+    // console.log("-------------")
+    // console.log(rec1.pos.y)
+    // console.log(rec2.pos.y)
+    // console.log("-------------")
+
+    if (rec1.pos.x < 510 && rec1.pos.x > 495 && rec1.pos.y < 230 && rec1.pos.y > 218) {
+        return true
+    } else {
+        return false 
+    }
+    
+}
+
 function animate() {
-    window.requestAnimationFrame(animate)
+    let requestID = window.requestAnimationFrame(animate)
         ctx.drawImage(map, mapX, mapY)
         boundries.forEach((boundary) => {
             boundary.draw()
@@ -273,6 +287,10 @@ function animate() {
         })
         player.draw()
         monster.draw()
+
+        if (gameOver({rec1: monster, rec2: player})) {
+            //window.cancelAnimationFrame(requestID)
+        }
 
         bruteForceChase({rec1: monster, rec2: player})
         
