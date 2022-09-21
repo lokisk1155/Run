@@ -1,6 +1,9 @@
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
+// dom content loaded event listener ******
+    // goes with webpack
+
 canvas.width = 1024
 canvas.height = 576
 
@@ -241,6 +244,16 @@ function playerCollision({rec1, rec2}) {
     return false 
 }
 
+function monsterCollision({rec1, rec2}) {
+    if (rec1.pos.x + rec1.width >= rec2.pos.x && 
+        rec1.pos.x <= rec2.pos.x + rec2.width &&
+        rec1.pos.y <= rec2.pos.y + rec2.height &&
+        rec1.pos.y + rec1.height >= rec2.pos.y) {
+            return true 
+        }
+    return false 
+}
+
 function bruteForceChase({rec1, rec2}) {
     if (rec1.pos.x < rec2.pos.x + 15) {
         rec1.pos.x += 1.25
@@ -260,19 +273,41 @@ function bruteForceChase({rec1, rec2}) {
 }
 
 function gameOver({rec1, rec2}) {
-    // console.log(rec1.pos.x)
-    // console.log(rec2.pos.x)
-    // console.log("-------------")
-    // console.log(rec1.pos.y)
-    // console.log(rec2.pos.y)
-    // console.log("-------------")
-
     if (rec1.pos.x < 510 && rec1.pos.x > 495 && rec1.pos.y < 230 && rec1.pos.y > 218) {
         return true
     } else {
         return false 
     }
-    
+}
+
+
+let movingAI = true 
+
+function navigateCollision({rec1, rec2}) {
+    let distanceBetweenX = Math.abs(rec2.pos.x - rec1.pos.x)
+    let distanceBetweenY = Math.abs(rec2.pos.y - rec1.pos.y)
+
+            if (distanceBetweenX < distanceBetweenY) {
+                // move up or down 
+                if (rec2.pos.y > rec1.pos.y) {
+                    // move monster down 
+                    rec1.pos.y += 1
+                } else {
+                    // move monster up 
+                    rec1.pos.y -= 1 
+                }
+            }
+            // } else {
+            //     // move left or right
+            //     if (rec2.pos.x > rec1.pos.x) {
+            //         // move right
+            //         rec1.pos.x += 1
+            //     } else {
+            //         // move left 
+            //         rec1.pos.x -= 1.25
+            //     }
+            // }
+            movingAI = true 
 }
 
 function animate() {
@@ -280,27 +315,42 @@ function animate() {
         ctx.drawImage(map, mapX, mapY)
         boundries.forEach((boundary) => {
             boundary.draw()
-
-            if (playerCollision({rec1: player, rec2: boundary})) {
-                console.log('poop')
-            }
         })
         player.draw()
         monster.draw()
 
         if (gameOver({rec1: monster, rec2: player})) {
-            window.cancelAnimationFrame(requestID)
+            //window.cancelAnimationFrame(requestID)
         }
 
-        bruteForceChase({rec1: monster, rec2: player})
+        if (movingAI) {
+            bruteForceChase({rec1: monster, rec2: player})
+        } else {
+            navigateCollision({rec1: monster, rec2: player})
+        }
         
         let movingPlayer = true 
-        let movingAI = true 
 
+      
         if (keyPressed.w.pressed && previousKey === 'w') {
 
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
+
+                if (
+                    monsterCollision({
+                        rec1: monster,
+                        rec2: {
+                            ...bound,
+                            pos: {
+                                x: bound.pos.x,
+                                y: bound.pos.y + 3
+                            }
+                        }
+                    })
+                ) {
+                    movingAI = false 
+                }
 
                 if (
                     playerCollision({
@@ -332,6 +382,21 @@ function animate() {
                 const bound = boundries[i]
 
                 if (
+                    monsterCollision({
+                        rec1: monster,
+                        rec2: {
+                            ...bound,
+                            pos: {
+                                x: bound.pos.x - 3,
+                                y: bound.pos.y 
+                            }
+                        }
+                    })
+                ) {
+                    movingAI = false 
+                }
+
+                if (
                     playerCollision({
                         rec1: player,
                         rec2: {
@@ -357,6 +422,21 @@ function animate() {
         } else if (keyPressed.a.pressed && previousKey === 'a') {
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
+
+                if (
+                    monsterCollision({
+                        rec1: monster,
+                        rec2: {
+                            ...bound,
+                            pos: {
+                                x: bound.pos.x + 3,
+                                y: bound.pos.y
+                            }
+                        }
+                    })
+                ) {
+                    movingAI = false 
+                }
 
                 if (
                     playerCollision({
@@ -385,6 +465,21 @@ function animate() {
         } else if (keyPressed.s.pressed && previousKey === 's') {
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
+
+                if (
+                    monsterCollision({
+                        rec1: monster,
+                        rec2: {
+                            ...bound,
+                            pos: {
+                                x: bound.pos.x,
+                                y: bound.pos.y - 3
+                            }
+                        }
+                    })
+                ) {
+                    movingAI = false 
+                }
 
                 if (
                     playerCollision({
