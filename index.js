@@ -282,14 +282,14 @@ function animate() {
             boundary.draw()
 
             if (playerCollision({rec1: player, rec2: boundary})) {
-                console.log('col')
+                console.log('poop')
             }
         })
         player.draw()
         monster.draw()
 
         if (gameOver({rec1: monster, rec2: player})) {
-            //window.cancelAnimationFrame(requestID)
+            window.cancelAnimationFrame(requestID)
         }
 
         bruteForceChase({rec1: monster, rec2: player})
@@ -315,22 +315,6 @@ function animate() {
                     })
                 ) {
                     movingPlayer = false 
-                    break
-                }
-
-                if (
-                    playerCollision({
-                        rec1: monster,
-                        rec2: {
-                            ...bound,
-                            pos: {
-                                x: bound.pos.x,
-                                y: bound.pos.y + 3
-                            }
-                        }
-                    })
-                ) {
-                    movingAI = false 
                     break
                 }
             } 
@@ -362,22 +346,6 @@ function animate() {
                     movingPlayer = false 
                     break
                 }
-
-                if (
-                    playerCollision({
-                        rec1: monster,
-                        rec2: {
-                            ...bound,
-                            pos: {
-                                x: bound.pos.x - 3,
-                                y: bound.pos.y 
-                            }
-                        }
-                    })
-                ) {
-                    movingAI = false 
-                    break
-                }
             } 
             if (movingPlayer) {
                 boundries.forEach((ele) => {
@@ -403,22 +371,6 @@ function animate() {
                     })
                 ) {
                     movingPlayer = false 
-                    break
-                }
-
-                if (
-                    playerCollision({
-                        rec1: monster,
-                        rec2: {
-                            ...bound,
-                            pos: {
-                                x: bound.pos.x + 3,
-                                y: bound.pos.y 
-                            }
-                        }
-                    })
-                ) {
-                    movingAI = false 
                     break
                 }
             } 
@@ -447,22 +399,6 @@ function animate() {
                     })
                 ) {
                     movingPlayer = false 
-                    break
-                }
-
-                if (
-                    playerCollision({
-                        rec1: player,
-                        rec2: {
-                            ...bound,
-                            pos: {
-                                x: bound.pos.x,
-                                y: bound.pos.y - 3
-                            }
-                        }
-                    })
-                ) {
-                    movingAI = false 
                     break
                 }
             } 
