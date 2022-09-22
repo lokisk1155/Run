@@ -95,7 +95,7 @@
 ```
 * If we are stuck : teleport to a smart location 
 ```
-   let prevTeleport = 'leftop'
+let prevTeleport = 'leftop'
 let prevdirect = 'top';
 function helpImStuck(panic) {
         if (prevdirect === 'bottom' || mapY > -500) {
