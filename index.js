@@ -87,7 +87,7 @@ class Player {
  }
 
 const map = new Image()
-map.src = 'testmap.png'
+map.src = 'finalmap.png'
 let mapX = offset.x
 let mapY = offset.y 
 
@@ -308,7 +308,13 @@ function spawnRightBottom() {
 
 
 
-function helpImStuck({temp1: rec1, temp2: rec2}) {
+function helpImStuck(panic) {
+    monster.moveDown()
+    monster.moveRight()
+
+    if (panic > 0) {
+        return helpImStuck(panic - 1)
+    }
     if (mapY > -500) {
         spawnLeftTop()
     } else {
@@ -330,7 +336,7 @@ function navigateCollision({rec1, rec2}) {
     if (prev[0] === rec1.pos.x && prev[1] === rec1.pos.y) {
         prev.shift()
         prev.shift()
-        helpImStuck({temp1: rec1, temp2: rec2})
+        helpImStuck(50)
         return 
     }  
     prev.shift()
