@@ -106,8 +106,8 @@ class Monster {
     constructor({pos, image}) {
         this.pos = pos 
         this.image = image 
-        this.width = 48
-        this.height = 48
+        this.width = 38
+        this.height = 38
     }
 
     draw() {
@@ -260,7 +260,7 @@ function bruteForceChase({rec1, rec2}) {
         if (monsterCollision({rec1: monster, rec2: bound })) {
             console.log('bigpoop')
             navigateCollision({rec1: monster, rec2: player})
-            return
+            return 
         } 
     }
              if (rec1.pos.x < rec2.pos.x + 15) {
@@ -290,6 +290,15 @@ function gameOver({rec1, rec2}) {
     }
 }
 
+function helpImStuck() {
+
+    /*
+
+
+
+    */
+}
+
 
 
 let movingAI = true 
@@ -298,11 +307,21 @@ let canGoLeft = true
 let canGoRight = true 
 let canGoUp = true 
 let canGoDown = true 
+let prev = []
 
 function navigateCollision({rec1, rec2}) {
-    
-        if (canGoDown) {
+    prev.push(rec1.pos.x)
+    prev.push(rec1.pos.y)
 
+    if (prev[0] === rec1.pos.x && prev[1] === rec1.pos.y) {
+        prev.shift()
+        prev.shift()
+        console.log('sucker')
+        helpImStuck()
+        return 
+    }   
+
+        if ((rec2.pos.y > rec1.pos.y)) {
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
                 if (
@@ -323,7 +342,8 @@ function navigateCollision({rec1, rec2}) {
                     canGoUp = false 
                 }
             }
-        } else if (rec2.pos.y - 100 < Math.abs(rec1.pos.y)) {
+        } 
+        if (rec2.pos.y < rec1.pos.y) {
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
                 if (
@@ -339,11 +359,9 @@ function navigateCollision({rec1, rec2}) {
                     })
                 ) {
                     rec1.pos.y -= 1
-                    canGoDown = true 
-                    return 
+                    canGoDown = true           
                 } else {
                     canGoDown = false 
-                    return 
                 }
             }
         }
@@ -369,7 +387,9 @@ function navigateCollision({rec1, rec2}) {
                     canGoLeft = false
                 }
             }
-            } else if (rec2.pos.x > rec1.pos.x + 50) {
+            } 
+            
+            if (rec2.pos.x > rec1.pos.x + 50) {
                 for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
                 if (
