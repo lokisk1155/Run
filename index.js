@@ -52,7 +52,8 @@ const collisions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  
+
+
 class Player {
     constructor({pos, image, frames = { max: 1}}) {
         this.pos = pos 
@@ -318,29 +319,30 @@ let canGoRight = true
 let canGoUp = true 
 let canGoDown = true 
 let prev = [0, 0]
-let prevTeleport = 'leftop'
+let prevHor = 'leftop'
+let prevVert = 'rightBottom'
 let prevdirect = 'top';
 function helpImStuck() {
     
         if (prevdirect === 'bottom' || mapY > -500) {
-            if (prevTeleport === 'leftTop') {
+            if (prevHor === 'leftTop') {
                 spawnRightTop()
-                prevTeleport = 'rightTop'
+                prevHor= 'rightTop'
                 prevdirect = 'top'
             } else {
                 spawnLeftTop()
-                prevTeleport = 'leftTop'
+                prevHor = 'leftTop'
                 prevdirect = 'top'
             }
         } else {
-            if (prevTeleport === 'rightBottom') {
+            if (prevVert === 'rightBottom') {
                 spawnLeftBottom()
-                prevTeleport = 'leftBottom'
+                prevVert = 'leftBottom'
                 prevdirect = 'bottom'
 
             } else {
                 spawnRightBottom()
-                prevTeleport = 'rightBottom'
+                prevVert = 'rightBottom'
                 prevdirect = 'bottom'
             }
         }
@@ -463,6 +465,7 @@ function animate() {
         player.draw()
         //player.highlight()
         monster.draw()
+        let movingPlayer = true 
     
     if (gameOn === false) {
         ctx.font = '48px serif'
@@ -482,7 +485,6 @@ function animate() {
         }
         bruteForceChase({rec1: monster, rec2: player})
 
-        let movingPlayer = true 
       
         if (keyPressed.w.pressed && previousKey === 'w') {
 
