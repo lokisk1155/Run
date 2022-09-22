@@ -263,11 +263,10 @@ function bruteForceChase({rec1, rec2}) {
         const bound = boundries[i]
         if (monsterCollision({rec1: monster, rec2: bound })) {
             navigateCollision({rec1: monster, rec2: player})
-            return 
+            return
         } 
     }
-    
-             if (rec1.pos.x < rec2.pos.x + 15) {
+            if (rec1.pos.x < rec2.pos.x + 15) {
                 rec1.moveRight()
             }
 
@@ -286,7 +285,7 @@ function bruteForceChase({rec1, rec2}) {
 }
 
 function gameOver({rec1}) {
-    if (rec1.pos.x < 510 && rec1.pos.x > 495 && rec1.pos.y < 230 && rec1.pos.y > 218) {
+    if (rec1.pos.x < 520 && rec1.pos.x > 485 && rec1.pos.y < 240 && rec1.pos.y > 205) {
         return true
     } else {
         return false 
@@ -313,55 +312,48 @@ function spawnRightTop() {
     monster.pos.y = 300
 }
 
-let prevTeleport = 'leftop'
-let prevdirect = 'top';
-function helpImStuck() {
-        monster.moveDown()
-
-        if (prevdirect === 'bottom' || mapY > -500) {
-            if (prevTeleport === 'leftTop') {
-                spawnRightTop()
-                console.log('righttop')
-                prevTeleport = 'rightTop'
-                prevdirect = 'top'
-            } else {
-                spawnLeftTop()
-                console.log('lefttop')
-                prevTeleport = 'leftTop'
-                prevdirect = 'top'
-            }
-        } else {
-            if (prevTeleport === 'rightBottom') {
-                spawnLeftBottom()
-                console.log('leftbottom')
-                prevTeleport = 'leftBottom'
-                prevdirect = 'bottom'
-
-            } else {
-                spawnRightBottom()
-                console.log('rightbottom')
-                prevTeleport = 'rightBottom'
-                prevdirect = 'bottom'
-            }
-        }
-}
-
 let movingAI = true 
 let canGoLeft = true 
 let canGoRight = true 
 let canGoUp = true 
 let canGoDown = true 
 let prev = [0, 0]
+let prevTeleport = 'leftop'
+let prevdirect = 'top';
+function helpImStuck() {
+    
+        if (prevdirect === 'bottom' || mapY > -500) {
+            if (prevTeleport === 'leftTop') {
+                spawnRightTop()
+                prevTeleport = 'rightTop'
+                prevdirect = 'top'
+            } else {
+                spawnLeftTop()
+                prevTeleport = 'leftTop'
+                prevdirect = 'top'
+            }
+        } else {
+            if (prevTeleport === 'rightBottom') {
+                spawnLeftBottom()
+                prevTeleport = 'leftBottom'
+                prevdirect = 'bottom'
+
+            } else {
+                spawnRightBottom()
+                prevTeleport = 'rightBottom'
+                prevdirect = 'bottom'
+            }
+        }
+}
 
 function navigateCollision({rec1, rec2}) {
     prev.push(rec1.pos.x)
     prev.push(rec1.pos.y)
-    count = 5
 
     if (prev[0] === rec1.pos.x && prev[1] === rec1.pos.y) {
         prev.shift()
         prev.shift()
-        helpImStuck(50)
+        helpImStuck()
         return 
     }  
     prev.shift()
@@ -481,15 +473,14 @@ function animate() {
     }
 
     if (gameOn) {
-        bruteForceChase({rec1: monster, rec2: player})    
-     
         if (gameOver({rec1: monster})) {
             window.cancelAnimationFrame(requestID)
             ctx.font = '48px serif';
-            ctx.strokeText('You got Striked' ,488,400)
+            ctx.strokeText('You got Striked' ,380, 175)
             gameOn = false 
             setTimeout(() => location.reload(), 4000)
         }
+        bruteForceChase({rec1: monster, rec2: player})
 
         let movingPlayer = true 
       
