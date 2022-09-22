@@ -112,8 +112,8 @@ class Monster {
     constructor({pos, image}) {
         this.pos = pos 
         this.image = image 
-        this.width = 38
-        this.height = 38
+        this.width = 65
+        this.height = 65
     }
 
     secretCounter = 0
@@ -310,7 +310,6 @@ function spawnRightBottom() {
 
 function helpImStuck(panic) {
     monster.moveDown()
-    monster.moveRight()
 
     if (panic > 0) {
         return helpImStuck(panic - 1)
