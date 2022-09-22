@@ -78,6 +78,12 @@ class Player {
         )
     }
 
+    // highlight() {
+    //     ctx.fillStyle = 'red'
+    //     //ctx.fillStyle = 'rgba(255, 0, 0, 0)'
+    //     ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height)
+    // }
+
  }
 
 const map = new Image()
@@ -109,6 +115,8 @@ class Monster {
         this.width = 38
         this.height = 38
     }
+
+    secretCounter = 0
 
     draw() {
         ctx.drawImage(
@@ -258,7 +266,6 @@ function bruteForceChase({rec1, rec2}) {
     for (let i = 0; i < boundries.length; i++) {
         const bound = boundries[i]
         if (monsterCollision({rec1: monster, rec2: bound })) {
-            console.log('bigpoop')
             navigateCollision({rec1: monster, rec2: player})
             return 
         } 
@@ -278,11 +285,9 @@ function bruteForceChase({rec1, rec2}) {
             if (rec1.pos.x > rec2.pos.x +15) {
                 rec1.moveLeft()
             }
-         
-    
 }
 
-function gameOver({rec1, rec2}) {
+function gameOver({rec1}) {
     if (rec1.pos.x < 510 && rec1.pos.x > 495 && rec1.pos.y < 230 && rec1.pos.y > 218) {
         return true
     } else {
@@ -290,24 +295,33 @@ function gameOver({rec1, rec2}) {
     }
 }
 
-function helpImStuck() {
+function spawnLeftTop() {
+    monster.pos.x = 50
+    monster.pos.y = 50
+}
 
-    /*
-
-
-
-    */
+function spawnRightBottom() {
+    monster.pos.x = 600
+    monster.pos.y = 600
 }
 
 
 
-let movingAI = true 
 
+function helpImStuck({temp1: rec1, temp2: rec2}) {
+    if (mapY > -500) {
+        spawnLeftTop()
+    } else {
+        spawnRightBottom()
+    }
+}
+
+let movingAI = true 
 let canGoLeft = true 
 let canGoRight = true 
 let canGoUp = true 
 let canGoDown = true 
-let prev = []
+let prev = [0, 0]
 
 function navigateCollision({rec1, rec2}) {
     prev.push(rec1.pos.x)
@@ -316,10 +330,11 @@ function navigateCollision({rec1, rec2}) {
     if (prev[0] === rec1.pos.x && prev[1] === rec1.pos.y) {
         prev.shift()
         prev.shift()
-        console.log('sucker')
-        helpImStuck()
+        helpImStuck({temp1: rec1, temp2: rec2})
         return 
-    }   
+    }  
+    prev.shift()
+    prev.shift() 
 
         if ((rec2.pos.y > rec1.pos.y)) {
             for (let i = 0; i < boundries.length; i++) {
@@ -336,7 +351,7 @@ function navigateCollision({rec1, rec2}) {
                         }
                     })
                 ) {
-                    rec1.pos.y += 1
+                    rec1.pos.y += 3
                     canGoUp = true 
                 } else {
                     canGoUp = false 
@@ -358,7 +373,7 @@ function navigateCollision({rec1, rec2}) {
                         }
                     })
                 ) {
-                    rec1.pos.y -= 1
+                    rec1.pos.y -= 3
                     canGoDown = true           
                 } else {
                     canGoDown = false 
@@ -381,7 +396,7 @@ function navigateCollision({rec1, rec2}) {
                         }
                     })
                 ) {
-                    rec1.pos.x -= 1
+                    rec1.pos.x -= 3
                     canGoLeft = true 
                 } else {
                     canGoLeft = false
@@ -404,7 +419,7 @@ function navigateCollision({rec1, rec2}) {
                         }
                     })
                 ) {
-                    rec1.pos.x += 1
+                    rec1.pos.x += 3
                     canGoRight = true 
                 } else {
                     canGoRight = false 
@@ -423,51 +438,25 @@ function animate() {
             boundary.draw()
         })
         player.draw()
+        //player.highlight()
         monster.draw()
         bruteForceChase({rec1: monster, rec2: player})    
 
-        if (gameOver({rec1: monster, rec2: player})) {
+        if (gameOver({rec1: monster})) {
             //window.cancelAnimationFrame(requestID)
         }
 
-        // if (movingAI) {
-        // 
-        //         if (monsterCollision({rec1: monster, rec2: bound})) {
-        //             console.log('doop')
-        //             movingAI = false 
-        //         } else {
-        //             console.log('poop')
-                    
-        //         }
-        //     }
-            
-        // } else {
-        //     navigateCollision({rec1: monster, rec2: player})
-        //     movingAI = true 
-        // }
-        
         let movingPlayer = true 
-
+        //console.log(player.pos.x)  
+        //console.log(monster.pos.x) 
+        //console.log("--------")
+        console.log(mapY, 'y')
+        console.log(mapX, 'x')
       
         if (keyPressed.w.pressed && previousKey === 'w') {
 
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
-
-                // if (
-                //     monsterCollision({
-                //         rec1: monster,
-                //         rec2: {
-                //             ...bound,
-                //             pos: {
-                //                 x: bound.pos.x,
-                //                 y: bound.pos.y + 3
-                //             }
-                //         }
-                //     })
-                // ) {
-                //     movingAI = false 
-                // }
 
                 if (
                     playerCollision({
@@ -498,21 +487,6 @@ function animate() {
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
 
-                // if (
-                //     monsterCollision({
-                //         rec1: monster,
-                //         rec2: {
-                //             ...bound,
-                //             pos: {
-                //                 x: bound.pos.x - 3,
-                //                 y: bound.pos.y 
-                //             }
-                //         }
-                //     })
-                // ) {
-                //     movingAI = false 
-                // }
-
                 if (
                     playerCollision({
                         rec1: player,
@@ -539,21 +513,6 @@ function animate() {
         } else if (keyPressed.a.pressed && previousKey === 'a') {
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
-
-                // if (
-                //     monsterCollision({
-                //         rec1: monster,
-                //         rec2: {
-                //             ...bound,
-                //             pos: {
-                //                 x: bound.pos.x + 3,
-                //                 y: bound.pos.y
-                //             }
-                //         }
-                //     })
-                // ) {
-                //     movingAI = false 
-                // }
 
                 if (
                     playerCollision({
@@ -582,21 +541,6 @@ function animate() {
         } else if (keyPressed.s.pressed && previousKey === 's') {
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
-
-                // if (
-                //     monsterCollision({
-                //         rec1: monster,
-                //         rec2: {
-                //             ...bound,
-                //             pos: {
-                //                 x: bound.pos.x,
-                //                 y: bound.pos.y - 3
-                //             }
-                //         }
-                //     })
-                // ) {
-                //     movingAI = false 
-                // }
 
                 if (
                     playerCollision({
