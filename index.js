@@ -402,7 +402,6 @@ function animate() {
                 if (monsterCollision({rec1: monster, rec2: bound})) {
                     console.log('doop')
                     movingAI = false 
-                    break
                 }
             }
             bruteForceChase({rec1: monster, rec2: player})
