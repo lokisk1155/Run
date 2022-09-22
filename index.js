@@ -255,21 +255,31 @@ function monsterCollision({rec1, rec2}) {
 }
 
 function bruteForceChase({rec1, rec2}) {
-    if (rec1.pos.x < rec2.pos.x + 15) {
-        rec1.moveRight()
+    for (let i = 0; i < boundries.length; i++) {
+        const bound = boundries[i]
+        if (monsterCollision({rec1: monster, rec2: bound })) {
+            console.log('bigpoop')
+            navigateCollision({rec1: monster, rec2: player})
+            return
+        } 
     }
+             if (rec1.pos.x < rec2.pos.x + 15) {
+                rec1.moveRight()
+            }
 
-    if (rec1.pos.y < rec2.pos.y - 100) {
-        rec1.moveDown()
-    }
+            if (rec1.pos.y < rec2.pos.y - 100) {
+                rec1.moveDown()
+            }
 
-    if (rec1.pos.y > rec2.pos.y - 100) {
-        rec1.moveUp()
-    }
+            if (rec1.pos.y > rec2.pos.y - 100) {
+                rec1.moveUp()
+            }
 
-    if (rec1.pos.x > rec2.pos.x +15) {
-        rec1.moveLeft()
-    }
+            if (rec1.pos.x > rec2.pos.x +15) {
+                rec1.moveLeft()
+            }
+         
+    
 }
 
 function gameOver({rec1, rec2}) {
@@ -284,10 +294,15 @@ function gameOver({rec1, rec2}) {
 
 let movingAI = true 
 
+let canGoLeft = true 
+let canGoRight = true 
+let canGoUp = true 
+let canGoDown = true 
+
 function navigateCollision({rec1, rec2}) {
-        let count = 0 
-        if (rec2.pos.y > rec1.pos.y) {
-            // move monster down 
+    
+        if (canGoDown) {
+
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
                 if (
@@ -302,11 +317,13 @@ function navigateCollision({rec1, rec2}) {
                         }
                     })
                 ) {
-                    rec1.pos.y += 3
-                    return
-                } 
+                    rec1.pos.y += 1
+                    canGoUp = true 
+                } else {
+                    canGoUp = false 
+                }
             }
-        } else if (rec2.pos.y < rec1.pos.y) {
+        } else if (rec2.pos.y - 100 < Math.abs(rec1.pos.y)) {
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
                 if (
@@ -321,13 +338,17 @@ function navigateCollision({rec1, rec2}) {
                         }
                     })
                 ) {
-                    rec1.pos.y -= 3
-                    return
-                } 
+                    rec1.pos.y -= 1
+                    canGoDown = true 
+                    return 
+                } else {
+                    canGoDown = false 
+                    return 
+                }
             }
         }
 
-            if (rec2.pos.x < rec1.pos.x) {
+            if (rec2.pos.x < rec1.pos.x + 50) {
                 for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
                 if (
@@ -341,12 +362,14 @@ function navigateCollision({rec1, rec2}) {
                             }
                         }
                     })
-                === false) {
-                    return false 
-
-                } 
+                ) {
+                    rec1.pos.x -= 1
+                    canGoLeft = true 
+                } else {
+                    canGoLeft = false
+                }
             }
-            } else if (rec2.pos.x > rec1.pos.x) {
+            } else if (rec2.pos.x > rec1.pos.x + 50) {
                 for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
                 if (
@@ -360,10 +383,12 @@ function navigateCollision({rec1, rec2}) {
                             }
                         }
                     })
-                === false) {
-                    rec1.pos.x += 3
-                    return false 
-                } 
+                ) {
+                    rec1.pos.x += 1
+                    canGoRight = true 
+                } else {
+                    canGoRight = false 
+                }
             }
         } 
 
@@ -379,29 +404,27 @@ function animate() {
         })
         player.draw()
         monster.draw()
+        bruteForceChase({rec1: monster, rec2: player})    
 
         if (gameOver({rec1: monster, rec2: player})) {
             //window.cancelAnimationFrame(requestID)
         }
 
-        if (movingAI) {
-            for (let i = 0; i < boundries.length; i++) {
-                const bound = boundries[i]
-
-                if (monsterCollision({rec1: monster, rec2: bound})) {
-                    console.log('doop')
-                    movingAI = false 
-                    break
-                }
-            }
-            bruteForceChase({rec1: monster, rec2: player})
-        } else {
-            if (navigateCollision({rec1: monster, rec2: player}) === false) {
-                movingAI = true 
-            } else {
-                navigateCollision({rec1: monster, rec2: player})
-            }
-        }
+        // if (movingAI) {
+        // 
+        //         if (monsterCollision({rec1: monster, rec2: bound})) {
+        //             console.log('doop')
+        //             movingAI = false 
+        //         } else {
+        //             console.log('poop')
+                    
+        //         }
+        //     }
+            
+        // } else {
+        //     navigateCollision({rec1: monster, rec2: player})
+        //     movingAI = true 
+        // }
         
         let movingPlayer = true 
 
