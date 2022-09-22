@@ -112,8 +112,8 @@ class Monster {
     constructor({pos, image}) {
         this.pos = pos 
         this.image = image 
-        this.width = 65
-        this.height = 65
+        this.width = 75
+        this.height = 75
     }
 
     secretCounter = 0
@@ -130,22 +130,22 @@ class Monster {
 
     moveRight() {
         this.draw()
-        this.pos.x += 2
+        this.pos.x += 2.5
     }
 
     moveLeft() {
         this.draw()
-        this.pos.x -= 2
+        this.pos.x -= 2.5
     }
 
     moveDown() {
         this.draw()
-        this.pos.y += 2 
+        this.pos.y += 2.5
     }
 
     moveUp() {
         this.draw()
-        this.pos.y -= 2
+        this.pos.y -= 2.5
     }
  }
 
@@ -238,10 +238,6 @@ window.addEventListener('keyup', (temp) => {
     }
 })
 
-
-
-
-
 function playerCollision({rec1, rec2}) {
     if (rec1.pos.x + 10 + rec1.width >= rec2.pos.x && 
         rec1.pos.x + 25 <= rec2.pos.x + rec2.width &&
@@ -270,6 +266,7 @@ function bruteForceChase({rec1, rec2}) {
             return 
         } 
     }
+    
              if (rec1.pos.x < rec2.pos.x + 15) {
                 rec1.moveRight()
             }
@@ -285,6 +282,7 @@ function bruteForceChase({rec1, rec2}) {
             if (rec1.pos.x > rec2.pos.x +15) {
                 rec1.moveLeft()
             }
+    
 }
 
 function gameOver({rec1}) {
@@ -296,29 +294,56 @@ function gameOver({rec1}) {
 }
 
 function spawnLeftTop() {
-    monster.pos.x = 50
-    monster.pos.y = 50
+    monster.pos.x = 75
+    monster.pos.y = 75
 }
 
 function spawnRightBottom() {
-    monster.pos.x = 600
-    monster.pos.y = 600
+    monster.pos.x = 700
+    monster.pos.y = 500
 }
 
+function spawnLeftBottom() {
+    monster.pos.x = 100
+    monster.pos.y = 500
+}
 
+function spawnRightTop() {
+    monster.pos.x = 650
+    monster.pos.y = 300
+}
 
+let prevTeleport = 'leftop'
+let prevdirect = 'top';
+function helpImStuck() {
+        monster.moveDown()
 
-function helpImStuck(panic) {
-    monster.moveDown()
+        if (prevdirect === 'bottom' || mapY > -500) {
+            if (prevTeleport === 'leftTop') {
+                spawnRightTop()
+                console.log('righttop')
+                prevTeleport = 'rightTop'
+                prevdirect = 'top'
+            } else {
+                spawnLeftTop()
+                console.log('lefttop')
+                prevTeleport = 'leftTop'
+                prevdirect = 'top'
+            }
+        } else {
+            if (prevTeleport === 'rightBottom') {
+                spawnLeftBottom()
+                console.log('leftbottom')
+                prevTeleport = 'leftBottom'
+                prevdirect = 'bottom'
 
-    if (panic > 0) {
-        return helpImStuck(panic - 1)
-    }
-    if (mapY > -500) {
-        spawnLeftTop()
-    } else {
-        spawnRightBottom()
-    }
+            } else {
+                spawnRightBottom()
+                console.log('rightbottom')
+                prevTeleport = 'rightBottom'
+                prevdirect = 'bottom'
+            }
+        }
 }
 
 let movingAI = true 
@@ -331,6 +356,7 @@ let prev = [0, 0]
 function navigateCollision({rec1, rec2}) {
     prev.push(rec1.pos.x)
     prev.push(rec1.pos.y)
+    count = 5
 
     if (prev[0] === rec1.pos.x && prev[1] === rec1.pos.y) {
         prev.shift()
@@ -435,7 +461,7 @@ function navigateCollision({rec1, rec2}) {
     }
      
 
-
+let gameOn = false 
 function animate() {
     let requestID = window.requestAnimationFrame(animate)
         ctx.drawImage(map, mapX, mapY)
@@ -445,18 +471,27 @@ function animate() {
         player.draw()
         //player.highlight()
         monster.draw()
-        bruteForceChase({rec1: monster, rec2: player})    
+    
+    if (gameOn === false) {
+        ctx.font = '48px serif'
+        ctx.strokeText('Press W/A/S/D to Start', 300, 250)
+        if (keyPressed.w.pressed || keyPressed.a.pressed || keyPressed.d.pressed || keyPressed.s.pressed) {
+            gameOn = true 
+        }
+    }
 
+    if (gameOn) {
+        bruteForceChase({rec1: monster, rec2: player})    
+     
         if (gameOver({rec1: monster})) {
-            //window.cancelAnimationFrame(requestID)
+            window.cancelAnimationFrame(requestID)
+            ctx.font = '48px serif';
+            ctx.strokeText('You got Striked' ,488,400)
+            gameOn = false 
+            setTimeout(() => location.reload(), 4000)
         }
 
         let movingPlayer = true 
-        //console.log(player.pos.x)  
-        //console.log(monster.pos.x) 
-        //console.log("--------")
-        console.log(mapY, 'y')
-        console.log(mapX, 'x')
       
         if (keyPressed.w.pressed && previousKey === 'w') {
 
@@ -572,6 +607,7 @@ function animate() {
                 monster.pos.y -= 3
             }
         }
+    }
     
 }
 
