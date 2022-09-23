@@ -78,7 +78,7 @@
     prev.shift()
     prev.shift() 
 ```
-* If we are not stuck : check if increasing a specific direction will cause a collision : if it will not cause a collison, add value to that cordinate 
+* If we are not stuck : check if increasing a specific direction will cause a collision : if it will not cause a collison, add value to that cordinate ** 
 ```
   if (
                     monsterCollision({
