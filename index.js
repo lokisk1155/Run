@@ -53,7 +53,7 @@ const collisions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-
+// ** took inspiration from sprite class from pokemon video, decided to make each thing its own class instead of putting monsters/players together
 class Player {
     constructor({pos, image, frames = { max: 1}}) {
         this.pos = pos 
@@ -104,6 +104,7 @@ const player = new Player({
         y: canvas.height / 2 + 70 / 2
     },
     image: playerImage, 
+    // ** how to crop the image from pokemon video
     frames: {
         max: 4
     }
@@ -157,7 +158,7 @@ class Monster {
     }, 
     image: monsterImage
 })
-
+// **
 class Boundary {
     constructor({pos}) {
         this.pos = pos 
@@ -171,15 +172,18 @@ class Boundary {
         ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height)
     }
 }
-
+// **
 const collisionMap = [] 
-
+/* ** When extracting from tiled, you recieve a JSON file of all of your layers represented as an array. We need to convert that into a 2D array that 
+represents the size of our map, because inside of tiled, our mapsize is 40x40, we want to create a 2d array where each rows length is only 40  */
 for (let i = 0; i < collisions.length; i+= 40) {
     collisionMap.push(collisions.slice(i, 40 + i))
 }
-
+// **
 const boundries = []
-
+/* ** Peak my collision map, this represents one layer of 
+all collision blocks that I placed inside of my grid. We can loop over each row/col and check if each ele is represented as a collision block. If it is 
+we want to create a "Boundry" node for that position. */
 collisionMap.forEach((row, idx) => {
     row.forEach((ele, jdx) => {
         if (ele === 1132) {
@@ -194,7 +198,7 @@ collisionMap.forEach((row, idx) => {
         }
     })
 })
-
+// ** hold boolean values for player movement logic 
 const keyPressed = {
     w: {
         pressed: false
@@ -209,8 +213,9 @@ const keyPressed = {
         pressed: false 
     }
 }
+// ** check what key was pressed first
 let previousKey = ''
-
+// ** assign boolean values to true when pressed
 window.addEventListener('keydown', (temp) => {
     if (temp.key === 'w') {
         keyPressed.w.pressed = true 
@@ -226,7 +231,7 @@ window.addEventListener('keydown', (temp) => {
         previousKey = 'd'
     }
 })
-
+// ** assign boolean values to false when no longer pressed
 window.addEventListener('keyup', (temp) => {
     if (temp.key === 'w') {
         keyPressed.w.pressed = false 
@@ -238,7 +243,7 @@ window.addEventListener('keyup', (temp) => {
         keyPressed.d.pressed = false 
     }
 })
-
+// ** check if player or monster is currently in contact with a boundry object
 function playerCollision({rec1, rec2}) {
     if (rec1.pos.x + 10 + rec1.width >= rec2.pos.x && 
         rec1.pos.x + 25 <= rec2.pos.x + rec2.width &&
@@ -248,7 +253,6 @@ function playerCollision({rec1, rec2}) {
         }
     return false 
 }
-
 function monsterCollision({rec1, rec2}) {
     if (rec1.pos.x + rec1.width >= rec2.pos.x && 
         rec1.pos.x <= rec2.pos.x + rec2.width &&
@@ -485,7 +489,14 @@ function animate() {
         }
         bruteForceChase({rec1: monster, rec2: player})
 
-      
+        /*  368-454 **
+            492-593 **
+            First check if any of our keys inside our keyPressed Object have a value set to true. If Its set to true and our 
+            previous key is equal to that true value, enter inside that conditional statement. Before we do anything we need to check
+            if moving in the direction of our key will cause a collision. To do this we loop over every single boundary and check if 
+            the direction we want to go will cause a collision or not. If it does not, we will move the map, monster, and boundaries to 
+            make it seem like our character is moving in that direction. If it will cause a collision, we will break out of the if statement.
+        */
         if (keyPressed.w.pressed && previousKey === 'w') {
 
             for (let i = 0; i < boundries.length; i++) {
