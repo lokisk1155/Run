@@ -78,7 +78,7 @@
     prev.shift()
     prev.shift() 
 ```
-* If we are not stuck : check if increasing a specific direction will cause a collision : if it will not cause a collison, add value to that cordinate 
+* If we are not stuck : check if increasing a specific direction will cause a collision : if it will not cause a collison, add value to that cordinate ** 
 ```
   if (
                     monsterCollision({
@@ -134,6 +134,7 @@ function helpImStuck(panic) {
   * twitter: https://twitter.com/christopher4lis
     
   #Video's noted as key references:(symbol marked inside code)
+  * *currently not sited, reorganizing file structure this weekend and will have it properly sited inside the code*
   * https://www.youtube.com/watch?v=yP5DKzriqXA&t=9625s => **
   * https://www.youtube.com/watch?v=5IMXpp3rohQ&t=8150s => %%
   * https://www.youtube.com/watch?v=C4_iRLlPNFc&t=4347s => $$
