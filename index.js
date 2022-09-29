@@ -96,7 +96,7 @@ const playerImage = new Image()
 playerImage.src = 'playerDown.png'
 
 const monsterImage = new Image() 
-monsterImage.src = 'playerRight.png'
+monsterImage.src = 'monster25.png'
 
 const player = new Player({
     pos: {
@@ -113,8 +113,8 @@ class Monster {
     constructor({pos, image}) {
         this.pos = pos 
         this.image = image 
-        this.width = 75
-        this.height = 75
+        this.width = 48
+        this.height = 48
     }
 
     secretCounter = 0
@@ -161,8 +161,8 @@ class Monster {
 class Boundary {
     constructor({pos}) {
         this.pos = pos 
-        this.width = 48
-        this.height = 48
+        this.width = 70
+        this.height = 70
     }
     
     draw() {
