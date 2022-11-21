@@ -4,6 +4,20 @@ const ctx = canvas.getContext('2d')
 // dom content loaded event listener ******
     // goes with webpack
 
+
+ 
+// const popUpWrapper = document.querySelector('pop-up-wrapper')
+// const closeButton = document.getElementById('close-pop-up-button')
+
+// closeButton.addEventListener('click', () => {
+//     popUpWrapper.classList.add('toggle-modal')
+// })
+
+// popUpInstructions.addEventListener('click', () => {
+//     popUpWrapper.classList.remove('toggle-modal')
+// })
+// const popUpInstructions = document.getElementById('pop-up-button')
+
 canvas.width = 1024
 canvas.height = 576
 
