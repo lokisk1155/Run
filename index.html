@@ -6,15 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Run!</title>
     <link type="image/png" sizes="16x16" rel="icon" href="https://img.icons8.com/external-flaticons-flat-flat-icons/64/000000/external-monster-supernatural-flaticons-flat-flat-icons.png">
-
-    <h1 style="color:white;margin-left: 45vw;">Run!</h1>
     <ul style="display:inline-block; align-items: center;margin-left:27vw;">
-        <button style="background-image: url('background.png');border: none;;" type="button" id="pop-up-button">
+        <button style="background:none;border: none;;" type="button" id="pop-up-button">
             <i class="pop-up-button-text"></i>
             <img  src="guide.png"></img>
         </button>
         <a target="_blank" rel="noopener noreferrer" href="https://github.com/lokisk1155/Run"><img src="github.png" style="margin: 5px;padding: 5px;height: 50px;width: 150px;" ></img></a>
-        <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/shawn-mallon/"><img src="linkedin.png" style="margin: 5px;padding: 5px;height: 45px;width:180px;background-image: url();" ></img></a>
+        <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/shawn-mallon/"><img src="linkedin.png" style="margin: 5px;padding: 5px;height: 45px;width:180px;background-image: url();margin-bottom: 8px;" ></img></a>
+        <button style="background: none;border: none;;" type="button" id="pop-up-about-button">
+            <i class="pop-up-button-text"></i>
+            <img style="height:65px;" src="about.png"></img>
+        </button>
       </ul>
 
     <dialog style="position: fixed;height: 100vh;width: 100vw;top: 0;left: 0;background-color: rgba(0, 0, 0, 0.3);" id="pop-up-wrapper">
@@ -23,6 +25,16 @@
                 <h1>Instructions:</h1>
                 <p">asdasdasdasdasdadsadasdasdasdadasdasd</p>
                 <button id="close-modal-button">X</button>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog style="position: fixed;height: 100vh;width: 100vw;top: 0;left: 0;background-color: rgba(0, 0, 0, 0.3);" id="pop-up-about-wrapper">
+        <adialog style="display:grid;background-color:#fff;height: 500px;width: 500px;margin-left: 30vw;margin-top: 20vh;">
+            <div class="pop-up-content">
+                <h1>About:</h1>
+                <p">asdasdasdasdasdadsadasdasdasdadasdasd</p>
+                <button id="close-about-modal-button">X</button>
             </div>
         </div>
     </dialog>

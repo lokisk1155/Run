@@ -11,5 +11,17 @@ closeModal.addEventListener('click', () => {
     modal.close(); 
 })
 
+const aboutButton = document.getElementById('pop-up-about-button')
+const aboutModal = document.getElementById('pop-up-about-wrapper')
+const closeAboutModal = document.getElementById('close-about-modal-button')
+
+aboutButton.addEventListener('click', () => {
+    aboutModal.showModal();
+    
+})
+
+closeAboutModal.addEventListener('click', () => {
+    aboutModal.close(); 
+})
 
 
