@@ -1,11 +1,15 @@
-const popUpWrapper = document.querySelector('pop-up-wrapper')
-const closeButton = document.getElementById('close-pop-up-button')
+const button = document.getElementById('pop-up-button')
+const modal = document.getElementById('pop-up-wrapper')
+const closeModal = document.getElementById('close-modal-button')
 
-closeButton.addEventListener('click', () => {
-    popUpWrapper.classList.add('toggle-modal')
+button.addEventListener('click', () => {
+    modal.showModal();
+    
 })
 
-popUpInstructions.addEventListener('click', () => {
-    popUpWrapper.classList.remove('toggle-modal')
+closeModal.addEventListener('click', () => {
+    modal.close(); 
 })
-const popUpInstructions = document.getElementById('pop-up-button')
+
+
+
