@@ -75,6 +75,25 @@ class Coin {
     }
 }
 
+class Winner {
+    constructor({pos, image}) {
+        this.pos = pos 
+        this.image = image 
+        this.width = 250
+        this.height = 250
+    }
+            
+    draw() {
+        ctx.drawImage(
+        this.image,
+        this.pos.x, 
+        this.pos.y,
+        this.width,
+        this.height        
+        ) 
+    }
+}
+
 // ** took inspiration from sprite class from pokemon video, decided to make each thing its own class instead of putting monsters/players together
 class Player {
     constructor({pos, image, frames = { max: 1}}) {
@@ -156,22 +175,22 @@ class Monster {
 
     moveRight() {
         this.draw()
-        this.pos.x += 2.5
+        this.pos.x += 1 
     }
 
     moveLeft() {
         this.draw()
-        this.pos.x -= 2.5
+        this.pos.x -= 1
     }
 
     moveDown() {
         this.draw()
-        this.pos.y += 2.5
+        this.pos.y += 1
     }
 
     moveUp() {
         this.draw()
-        this.pos.y -= 2.5
+        this.pos.y -= 1
     }
  }
 
@@ -188,11 +207,24 @@ coinImage.src = 'coin.png'
 
 const coin = new Coin({
     pos: {
-        x: 225,
+        x: 250,
         y: 225, 
     },
     image: coinImage
 })
+
+const winnerImage = new Image() 
+winnerImage.src = 'winner.png'
+
+const winner = new Winner({
+    pos: {
+        x: 0,
+        y: 0, 
+    },
+    image: winnerImage
+
+})
+
 // **
 class Boundary {
     constructor({pos}) {
@@ -533,7 +565,6 @@ function animate() {
         //player.highlight()
         monster.draw()
         coin.draw()
-
         let movingPlayer = true 
 
     
@@ -545,29 +576,39 @@ function animate() {
         }
     }
 
-
     if (gameOn) {
+        
         if (score({ rec1: coin })) {
             clockCount += 1 
-            if (direction === 'up') {
-                coin.pos.y = monster.pos.y - 125 
-            } else if (direction === 'right') {
-                coin.pos.x = monster.pos.x - 125
-            } else if (direction === 'left') {
-                coin.pos.x = monster.pos.x + 125
-            } else if (direction === 'down') {
-                coin.pos.y = monster.pos.y + 125 
+            if (clockCount === 1) {
+                coin.pos.y = 650
+            } else if (clockCount === 2) {
+                coin.pos.x = 1000
+            } else if (clockCount === 3) {
+                coin.pos.y = -300
+            } else if (clockCount === 4) {
+                gameOn = false 
             }
         }
 
         ctx.strokeText(`${clockCount}`, 520, 200)     
-        // if (gameOver({rec1: monster})) {
-        //     window.cancelAnimationFrame(requestID)
-        //     ctx.font = '48px serif';
-        //     ctx.strokeText('You got Striked' ,380, 175)
-        //     gameOn = false 
-        //     setTimeout(() => location.reload(), 4000)
-        // }
+        if (gameOver({rec1: monster})) {
+            gameOn = false 
+        }
+
+        if (!gameOn) {
+            window.cancelAnimationFrame(requestID)
+            ctx.font = '120px Georgia'
+            ctx.fillStyle = 'red'
+            if (clockCount === 4) {
+                winner.draw() 
+                ctx.fillText('Winner!' ,360, 175)
+            } else {
+                ctx.fillText('You got Striked' , 100, 275)
+            }
+            gameOn = true 
+            setTimeout(() => location.reload(), 4000)
+        }
         bruteForceChase({rec1: monster, rec2: player})
 
         /*  368-454 **
