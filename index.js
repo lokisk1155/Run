@@ -53,6 +53,28 @@ const collisions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
+
+
+
+class Coin {
+    constructor({pos, image}) {
+        this.pos = pos 
+        this.image = image 
+        this.width = 48
+        this.height = 48
+    }
+            
+    draw() {
+        ctx.drawImage(
+        this.image,
+        this.pos.x, 
+        this.pos.y,
+        this.width,
+        this.height        
+        ) 
+    }
+}
+
 // ** took inspiration from sprite class from pokemon video, decided to make each thing its own class instead of putting monsters/players together
 class Player {
     constructor({pos, image, frames = { max: 1}}) {
@@ -92,6 +114,8 @@ map.src = 'finalmap.png'
 let mapX = offset.x
 let mapY = offset.y 
 
+
+
 const playerImage = new Image() 
 playerImage.src = 'playerDown.png'
 
@@ -126,8 +150,8 @@ class Monster {
             this.pos.x, 
             this.pos.y,
             this.width,
-            this.height
-        )
+            this.height        
+        ) 
     }
 
     moveRight() {
@@ -157,6 +181,17 @@ class Monster {
         y: 50
     }, 
     image: monsterImage
+})
+
+const coinImage = new Image() 
+coinImage.src = 'coin.png'
+
+const coin = new Coin({
+    pos: {
+        x: 225,
+        y: 225, 
+    },
+    image: coinImage
 })
 // **
 class Boundary {
@@ -198,6 +233,18 @@ collisionMap.forEach((row, idx) => {
         }
     })
 })
+// const slicedMap = [] 
+// let boundaryFound = false 
+// for (let i = 0; i < collisions.length; i++) {
+//     if (collisions[i] === 1132) boundaryFound = true 
+//     if (boundaryFound) slicedMap.push(collisions[i])
+// }
+// let backwardsFound = false 
+// for (let i = slicedMap.length; i > 0; i--) {
+//     if (slicedMap[i] === 1132) backwardsFound = true 
+//     if (!backwardsFound) slicedMap.pop() 
+// }
+
 // ** hold boolean values for player movement logic 
 const keyPressed = {
     w: {
@@ -273,18 +320,22 @@ function bruteForceChase({rec1, rec2}) {
     }
             if (rec1.pos.x < rec2.pos.x + 15) {
                 rec1.moveRight()
+                direction = 'right'
             }
 
             if (rec1.pos.y < rec2.pos.y - 100) {
                 rec1.moveDown()
+                direction = 'down'
             }
 
             if (rec1.pos.y > rec2.pos.y - 100) {
                 rec1.moveUp()
+                direction = 'up'
             }
 
             if (rec1.pos.x > rec2.pos.x +15) {
                 rec1.moveLeft()
+                direction = 'left'
             }
     
 }
@@ -297,24 +348,32 @@ function gameOver({rec1}) {
     }
 }
 
-function spawnLeftTop() {
-    monster.pos.x = 75
-    monster.pos.y = 75
+function score({rec1}) {
+    if (rec1.pos.x < 520 && rec1.pos.x > 485 && rec1.pos.y < 240 && rec1.pos.y > 205) {
+        return true
+    } else {
+        return false 
+    }
 }
 
-function spawnRightBottom() {
-    monster.pos.x = 700
-    monster.pos.y = 500
+function spawnLeftTop({ rec }) {
+    rec.pos.x = 75
+    rec.pos.y = 75
 }
 
-function spawnLeftBottom() {
-    monster.pos.x = 100
-    monster.pos.y = 500
+function spawnRightBottom({ rec }) {
+    rec.pos.x = 700
+    rec.pos.y = 500
 }
 
-function spawnRightTop() {
-    monster.pos.x = 650
-    monster.pos.y = 300
+function spawnLeftBottom({ rec}) {
+    rec.pos.x = 100
+    rec.pos.y = 500
+}
+
+function spawnRightTop({ rec }) {
+    rec.pos.x = 650
+    rec.pos.y = 300
 }
 
 let movingAI = true 
@@ -326,26 +385,28 @@ let prev = [0, 0]
 let prevHor = 'leftop'
 let prevVert = 'rightBottom'
 let prevdirect = 'top';
-function helpImStuck() {
+let randomX;
+let randomY;
+function helpImStuck({ rec }) {
     
         if (prevdirect === 'bottom' || mapY > -500) {
             if (prevHor === 'leftTop') {
-                spawnRightTop()
+                spawnRightTop({ rec })
                 prevHor= 'rightTop'
                 prevdirect = 'top'
             } else {
-                spawnLeftTop()
+                spawnLeftTop({ rec })
                 prevHor = 'leftTop'
                 prevdirect = 'top'
             }
         } else {
             if (prevVert === 'rightBottom') {
-                spawnLeftBottom()
+                spawnLeftBottom({ rec })
                 prevVert = 'leftBottom'
                 prevdirect = 'bottom'
 
             } else {
-                spawnRightBottom()
+                spawnRightBottom({ rec })
                 prevVert = 'rightBottom'
                 prevdirect = 'bottom'
             }
@@ -359,7 +420,7 @@ function navigateCollision({rec1, rec2}) {
     if (prev[0] === rec1.pos.x && prev[1] === rec1.pos.y) {
         prev.shift()
         prev.shift()
-        helpImStuck()
+        helpImStuck({ rec: rec1 })
         return 
     }  
     prev.shift()
@@ -456,10 +517,12 @@ function navigateCollision({rec1, rec2}) {
             }
         } 
 
-    }
+}
      
 
 let gameOn = false 
+let clockCount = 0 
+let direction; 
 function animate() {
     let requestID = window.requestAnimationFrame(animate)
         ctx.drawImage(map, mapX, mapY)
@@ -469,7 +532,10 @@ function animate() {
         player.draw()
         //player.highlight()
         monster.draw()
+        coin.draw()
+
         let movingPlayer = true 
+
     
     if (gameOn === false) {
         ctx.font = '48px serif'
@@ -479,14 +545,29 @@ function animate() {
         }
     }
 
+
     if (gameOn) {
-        if (gameOver({rec1: monster})) {
-            window.cancelAnimationFrame(requestID)
-            ctx.font = '48px serif';
-            ctx.strokeText('You got Striked' ,380, 175)
-            gameOn = false 
-            setTimeout(() => location.reload(), 4000)
+        if (score({ rec1: coin })) {
+            clockCount += 1 
+            if (direction === 'up') {
+                coin.pos.y = monster.pos.y - 125 
+            } else if (direction === 'right') {
+                coin.pos.x = monster.pos.x - 125
+            } else if (direction === 'left') {
+                coin.pos.x = monster.pos.x + 125
+            } else if (direction === 'down') {
+                coin.pos.y = monster.pos.y + 125 
+            }
         }
+
+        ctx.strokeText(`${clockCount}`, 520, 200)     
+        // if (gameOver({rec1: monster})) {
+        //     window.cancelAnimationFrame(requestID)
+        //     ctx.font = '48px serif';
+        //     ctx.strokeText('You got Striked' ,380, 175)
+        //     gameOn = false 
+        //     setTimeout(() => location.reload(), 4000)
+        // }
         bruteForceChase({rec1: monster, rec2: player})
 
         /*  368-454 **
@@ -525,6 +606,7 @@ function animate() {
                 })
                 mapY += 3
                 monster.pos.y += 3
+                coin.pos.y += 3
                 
             }
         } else if (keyPressed.d.pressed && previousKey === 'd') {
@@ -553,6 +635,7 @@ function animate() {
                 })
                 mapX -= 3
                 monster.pos.x -= 3
+                coin.pos.x -= 3
             }     
         } else if (keyPressed.a.pressed && previousKey === 'a') {
             for (let i = 0; i < boundries.length; i++) {
@@ -581,6 +664,7 @@ function animate() {
                 })
                 mapX += 3
                 monster.pos.x += 3
+                coin.pos.x += 3
             }
         } else if (keyPressed.s.pressed && previousKey === 's') {
             for (let i = 0; i < boundries.length; i++) {
@@ -609,6 +693,7 @@ function animate() {
                 })
                 mapY -= 3
                 monster.pos.y -= 3
+                coin.pos.y -= 3
             }
         }
     }
