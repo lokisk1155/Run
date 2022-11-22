@@ -175,22 +175,22 @@ class Monster {
 
     moveRight() {
         this.draw()
-        this.pos.x += 1 
+        this.pos.x += 2.25
     }
 
     moveLeft() {
         this.draw()
-        this.pos.x -= 1
+        this.pos.x -= 2.25
     }
 
     moveDown() {
         this.draw()
-        this.pos.y += 1
+        this.pos.y += 2.25
     }
 
     moveUp() {
         this.draw()
-        this.pos.y -= 1
+        this.pos.y -= 2.25
     }
  }
 
@@ -602,7 +602,7 @@ function animate() {
             ctx.fillStyle = 'red'
             if (clockCount === 4) {
                 winner.draw() 
-                ctx.fillText('Winner!' ,360, 175)
+                ctx.fillText('Winner!' ,300, 125)
             } else {
                 ctx.fillText('You got Striked' , 100, 275)
             }
