@@ -96,20 +96,22 @@ class Winner {
 
 // ** took inspiration from sprite class from pokemon video, decided to make each thing its own class instead of putting monsters/players together
 class Player {
-    constructor({pos, image, frames = { max: 1}}) {
+    constructor({pos, image, frames = { max: 1}, sprites}) {
         this.pos = pos 
         this.image = image
-        this.frames = frames
+        this.frames = {...frames, val: 0, elapsed: 0}
         this.image.onload = () => {
             this.width = this.image.width / this.frames.max 
             this.height = this.image.height
         }
+        this.moving = false 
+        this.sprites = sprites
     }
     
     draw() {
         ctx.drawImage(
             this.image, 
-            0, 
+            this.frames.val, 
             0,
             this.image.width / this.frames.max,
             this.pos.x,
@@ -118,6 +120,17 @@ class Player {
             this.image.width / this.frames.max,
             350
         )
+
+        if (!this.moving) return 
+
+        if (this.frames.max > 1) {
+            this.frames.elapsed++
+        }
+
+        if (this.frames.elapsed % 10 === 0) {
+            if (this.frames.val < this.frames.max - 1) this.frames.val++
+            else this.frames.val = 0 
+        }
     }
 
     // highlight() {
@@ -135,8 +148,17 @@ let mapY = offset.y
 
 
 
-const playerImage = new Image() 
-playerImage.src = 'playerDown.png'
+const playerDown = new Image() 
+playerDown.src = 'playerDown.png'
+
+const playerUp = new Image() 
+playerUp.src = 'playerUp.png'
+
+const playerRight = new Image() 
+playerRight.src = 'playerRight.png'
+
+const playerLeft = new Image() 
+playerLeft.src = 'playerleft.png'
 
 const monsterImage = new Image() 
 monsterImage.src = 'monster25.png'
@@ -146,10 +168,16 @@ const player = new Player({
         x: canvas.width / 2 - 190 / 4 / 2, 
         y: canvas.height / 2 + 70 / 2
     },
-    image: playerImage, 
+    image: playerDown, 
     // ** how to crop the image from pokemon video
     frames: {
         max: 4
+    },
+    sprites: {
+        up: playerUp,
+        down: playerDown,
+        right: playerRight,
+        left: playerLeft 
     }
 })
 
@@ -619,8 +647,10 @@ function animate() {
             the direction we want to go will cause a collision or not. If it does not, we will move the map, monster, and boundaries to 
             make it seem like our character is moving in that direction. If it will cause a collision, we will break out of the if statement.
         */
+       player.moving = false 
         if (keyPressed.w.pressed && previousKey === 'w') {
-
+            player.moving = true 
+            player.image = player.sprites.up
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
 
@@ -651,6 +681,8 @@ function animate() {
                 
             }
         } else if (keyPressed.d.pressed && previousKey === 'd') {
+            player.moving = true 
+            player.image = player.sprites.right
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
 
@@ -679,6 +711,8 @@ function animate() {
                 coin.pos.x -= 3
             }     
         } else if (keyPressed.a.pressed && previousKey === 'a') {
+            player.moving = true 
+            player.image = player.sprites.left
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
 
@@ -708,6 +742,8 @@ function animate() {
                 coin.pos.x += 3
             }
         } else if (keyPressed.s.pressed && previousKey === 's') {
+            player.moving = true 
+            player.image = player.sprites.down
             for (let i = 0; i < boundries.length; i++) {
                 const bound = boundries[i]
 
