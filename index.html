@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Run!</title>
     <link type="image/png" sizes="16x16" rel="icon" href="https://img.icons8.com/external-flaticons-flat-flat-icons/64/000000/external-monster-supernatural-flaticons-flat-flat-icons.png">
-    <ul style="display:inline-block; align-items: center;margin-left:27vw;">
-        <button style="background:none;border: none;;" type="button" id="pop-up-button">
+    <ul style="text-align: center;">
+        <button style="background:none;border: none;" type="button" id="pop-up-button">
             <i class="pop-up-button-text"></i>
             <img  src="guide.png"></img>
         </button>
-        <a target="_blank" rel="noopener noreferrer" href="https://github.com/lokisk1155/Run"><img src="github.png" style="margin: 5px;padding: 5px;height: 50px;width: 150px;" ></img></a>
+        <a target="_blank" rel="noopener noreferrer" href="https://github.com/lokisk1155/Run"><img src="github.png" style="padding: 5px;height: 50px;width: 150px;" ></img></a>
         <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/shawn-mallon/"><img src="linkedin.png" style="margin: 5px;padding: 5px;height: 45px;width:180px;background-image: url();margin-bottom: 8px;" ></img></a>
         <button style="background: none;border: none;;" type="button" id="pop-up-about-button">
             <i class="pop-up-button-text"></i>
@@ -20,23 +20,38 @@
       </ul>
 
     <dialog style="position: fixed;height: 100vh;width: 100vw;top: 0;left: 0;background-color: rgba(0, 0, 0, 0.3);" id="pop-up-wrapper">
-        <adialog style="background-image: url('testmap.png');display:grid;background-color:#fff;height: 500px;width: 500px;margin-left: 30vw;margin-top: 20vh;">
-            <div class="pop-up-content">
-                <h1>Instructions:</h1>
-                <p">asdasdasdasdasdadsadasdasdasdadasdasd</p>
-                <img src="playerLeft.png" style=""> </img>
-                <img src="monster25.png" style=""> </img>
-                <button id="close-modal-button">X</button>
+        <div style="background-image: url('testmap.png');display:grid;background-color:#fff;height: 500px;width: 500px;margin-left: 38vw;margin-top: 20vh;">
+            <div class="pop-up-content" style="">
+                <div class="pop-up-content">
+                    <h2 style="margin-left:200px;">Controls:</h2>
+                    <div style="display: flex;margin-left:50px">
+                            <ul>Up: W</ul>
+                            <ul>Down: S</ul>
+                            <ul>Left: A</ul>
+                            <ul>Right: D</ul>
+                    </div>
+                    <img src="playerDown.png" style="margin-left:149px;"> </img>
+
+                    <h3 style="margin-left:109px;" >Don't get caught lacking by this guy</h3>
+                    <img src="monster25.png" style="height: 75px;margin-left:209px;"> </img>
+
+                    <div>
+                        <h2 style="margin-left:139px;">Collect 4 coins to win!</h2>
+                        <img src="coin.png" style="height: 50px;margin-left:229px;"> </img>
+                    </div>
+                  
+                    <button id="close-modal-button" style="width: 500px;margin-top: 30px;border: none;height: 30px;background-color: blanchedalmond;">close</button>
+                </div>
             </div>
-        </div>
     </dialog>
 
     <dialog style="position: fixed;height: 100vh;width: 100vw;top: 0;left: 0;background-color: rgba(0, 0, 0, 0.3);" id="pop-up-about-wrapper">
-        <adialog style="display:grid;background-color:#fff;height: 500px;width: 500px;margin-left: 30vw;margin-top: 20vh;">
-            <div style="background-image: url('about.png');"class="pop-up-content">
-                <h1>About:</h1>
-                <p">asdasdasdasdasdadsadasdasdasdadasdasd</p>
-                <button id="close-about-modal-button">X</button>
+        <div style="display:grid;background-color:#fff;height: 500px;width: 500px;margin-left: 38vw;margin-top: 20vh;text-align: center;">
+            <div style="background-image: url('background.png');"class="pop-up-content">
+                <img src="monster25.png"></img>
+                <h4 style="color:whitesmoke; margin: 10px; padding: 10px;">You are most likely clicking the monster because you are confused why it is so buggy. While the game gives the illusion the player is moving; Everything is actually being offset around the character in the center of the screen. The game mechanics are built with this in mind, but to have a bugfree game. A pathing algo needs to be used on an array with X, Y cordinates for both the player and monster. </h4>
+                <h4 style="color:whitesmoke">Repo Link</h4>
+                <button id="close-about-modal-button" style="width: 100px;border: none;height: 30px;background-color:whitesmoke;position: relative;bottom: 0px;">close</button>
             </div>
         </div>
     </dialog>
@@ -49,8 +64,8 @@
         }
     </style>
     
-    <div style="display: flex;margin-top: 50px;">
-            <canvas style="margin-left: 200px;"></canvas> 
+    <div style="text-align: center;">
+            <canvas style="height: 85vh;width: 70vw;"></canvas> 
     </div>
     <script src="index.js" ></script>
     <script src="modal.js"></script>
